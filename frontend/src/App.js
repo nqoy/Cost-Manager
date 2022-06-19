@@ -62,7 +62,8 @@ function App() {
           {showAddForm && <AddCostForm
             categoryOptions={categoryOptions}
             currentDate={currentDate}
-            monthOptions={monthsOptoins} />}
+            monthOptions={monthsOptoins}
+            user_identifier={userIdentifier} />}
           <Flex className="ContainersFlex">
             <CostContainer>
               <label>Costs</label>

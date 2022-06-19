@@ -14,7 +14,7 @@ router.route('/').get((req, res) => {
 // Post Cost & Update Compute if exsists-----------------------------------
 router.route('/add').post((req, res) => {
   const cost_id = uuidv4();
-  const user_identifier = req.body.userid;
+  const user_identifier = req.body.user_identifier;
   const description = req.body.description;
   const category = req.body.category;
   const sum = Number(req.body.sum);
@@ -30,7 +30,7 @@ router.route('/add').post((req, res) => {
     year,
     month
   });
-
+  console.log(newCost);
   newCost.save()
     .then(() => res.json('Cost added!'))
     .catch(err => res.status(400).json('Error: ' + err));
@@ -41,24 +41,23 @@ router.route('/add').post((req, res) => {
 });
 // Post Cost & Update Compute if exsists-----------------------------------
 
-// Get Cost by Year, Month & Userid -----------------------------------------------
-router.route('/userid/:userid/year/:year/month/:month').get((req, res) => {
-
+// Get Cost by Year, Month & user_identifier -----------------------------------------------
+router.route('/user_identifier/:user_identifier/year/:year/month/:month').get((req, res) => {
+      console.log(req.params)
   if (req.params.month === "All") {
 
-    Cost.find({ 'year': req.params.year, 'userid': req.params.userid })
+    Cost.find({ 'year': req.params.year, 'user_identifier': req.params.user_identifier })
       .then(cost => tempCost = cost)
       .catch(err => res.status(400).json('Error: ' + err));
   }
   else {
-    Cost.find({ 'year': req.params.year, 'month': req.params.month, 'userid': req.params.userid })
+    Cost.find({ 'year': req.params.year, 'month': req.params.month, 'user_identifier': req.params.user_identifier })
       .then(cost => tempCost = cost)
       .catch(err => res.status(400).json('Error: ' + err));
   }
 
-  Computes.findOne({ 'year': req.params.year, 'month': req.params.month, 'userid': req.params.userid })
-    .then(computes => computeSum = computes)
-    .catch(err => res.status(400).json('Error: ' + err));
+  Computes.findOne({ 'year': req.params.year, 'month': req.params.month, 'user_identifier': req.params.user_identifier })
+    .then(computes => computeSum = computes);
 
   if (computeSum === null) {
     let sums = 0;

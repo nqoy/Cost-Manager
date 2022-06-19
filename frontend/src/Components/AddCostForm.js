@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { StyledInput } from "./Styles/Input.Styled";
 
-const AddCostForm = ({ categoryOptions, currentDate, monthOptions }) => {
+const AddCostForm = ({ categoryOptions, currentDate, monthOptions, user_identifier }) => {
 
     const [selectDate, setSelectDate] = useState(currentDate);
     const [description, setDescription] = useState("");
@@ -25,7 +25,7 @@ const AddCostForm = ({ categoryOptions, currentDate, monthOptions }) => {
 
     const categorySelectOptions = createSelectOptions();
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         const month = monthOptions[selectDate.getMonth() + 1];
         const year = selectDate.getFullYear();
         const errors = {};
@@ -41,7 +41,8 @@ const AddCostForm = ({ categoryOptions, currentDate, monthOptions }) => {
         }
         setFormErrors(errors);
         if (Object.keys(errors).length === 0) {
-            const cost = { category, description, sum, month, year };
+            const cost = { category, description, sum, month, year, user_identifier };
+            console.log(JSON.stringify(cost));
             fetch("http://localhost:5000/costs/add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -49,6 +50,7 @@ const AddCostForm = ({ categoryOptions, currentDate, monthOptions }) => {
             }).then(() => {
                 console.log("Product added succesfully");
             })
+            window.location.reload();
         }
     }
 
