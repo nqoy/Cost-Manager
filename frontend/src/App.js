@@ -13,19 +13,20 @@ import { MainContainer, CostContainer, BackgroundContainer } from "./Components/
 function App() {
 
   const [costsData, setCostsData] = useState([]);
-  const [userID, setUserID] = useState("");
+  const [userIdentifier, setUserIdentifier] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
 
 
   const onClickAdd = () => { setShowAddForm(!showAddForm) }
   const onClickLogout = () => {
     window.localStorage.setItem("USER_ID", "")
-    setUserID(null);
+    setUserIdentifier(null);
   }
 
   useEffect(() => {
-    window.localStorage.setItem("USER_ID", JSON.stringify(userID))
-  }, [userID])
+    console.log(userIdentifier)
+    window.localStorage.setItem("USER_ID", JSON.stringify(userIdentifier))
+  }, [userIdentifier])
 
 
   //General Options
@@ -43,8 +44,8 @@ function App() {
         <video autoPlay loop muted>
           <source src={wavesBackground} type={"video/mp4"}></source>
         </video>
-        {!userID && <LoginForm setUserId={setUserID} />}
-        {userID && <MainContainer className="MainApp">
+        {!userIdentifier && <LoginForm setUserIdentifier={setUserIdentifier} />}
+        {userIdentifier && <MainContainer className="MainApp">
           {!showAddForm && <FormButton
             onClick={() => onClickLogout()}
             backgroundColor={"black"}
@@ -72,6 +73,7 @@ function App() {
               currentDate={currentDate}
               setCostsData={setCostsData}
               costsData={costsData}
+              userIdentifier={userIdentifier}
             ></FilterForm>
             <CostsGraph costsData={costsData} />
           </Flex>

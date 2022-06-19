@@ -14,6 +14,7 @@ router.route('/').get((req, res) => {
 // Post Cost & Update Compute if exsists-----------------------------------
 router.route('/add').post((req, res) => {
   const cost_id = uuidv4();
+  const user_identifier = req.body.userid;
   const description = req.body.description;
   const category = req.body.category;
   const sum = Number(req.body.sum);
@@ -22,8 +23,7 @@ router.route('/add').post((req, res) => {
 
   const newCost = new Cost({
     cost_id,
-    username,
-    userid,
+    user_identifier,
     description,
     category,
     sum,
@@ -41,22 +41,22 @@ router.route('/add').post((req, res) => {
 });
 // Post Cost & Update Compute if exsists-----------------------------------
 
-// Get Cost by Year & Month -----------------------------------------------
-router.route('/year/:year/month/:month').get((req, res) => {
+// Get Cost by Year, Month & Userid -----------------------------------------------
+router.route('/userid/:userid/year/:year/month/:month').get((req, res) => {
 
   if (req.params.month === "All") {
 
-    Cost.find({ 'year': req.params.year })
+    Cost.find({ 'year': req.params.year, 'userid': req.params.userid })
       .then(cost => tempCost = cost)
       .catch(err => res.status(400).json('Error: ' + err));
   }
   else {
-    Cost.find({ 'year': req.params.year, 'month': req.params.month })
+    Cost.find({ 'year': req.params.year, 'month': req.params.month, 'userid': req.params.userid })
       .then(cost => tempCost = cost)
       .catch(err => res.status(400).json('Error: ' + err));
   }
 
-  Computes.findOne({ 'year': req.params.year, 'month': req.params.month })
+  Computes.findOne({ 'year': req.params.year, 'month': req.params.month, 'userid': req.params.userid })
     .then(computes => computeSum = computes)
     .catch(err => res.status(400).json('Error: ' + err));
 
@@ -64,11 +64,13 @@ router.route('/year/:year/month/:month').get((req, res) => {
     let sums = 0;
     tempCost.forEach(cost => sums += cost.sum);
 
+    const user_identifier = req.params.user_identifier;
     const sum = sums;
     const year = req.params.year;
     const month = req.params.month;
 
     const newComputes = new Computes({
+      user_identifier,
       sum,
       year,
       month
@@ -77,8 +79,7 @@ router.route('/year/:year/month/:month').get((req, res) => {
     newComputes.save();
   }
 
-  const data =  [tempCost, computeSum] ;
-
+  const data = [tempCost, computeSum];
   res.json(data);
 });
 // Get Cost by Year & Month -----------------------------------------------

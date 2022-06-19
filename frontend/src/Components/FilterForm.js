@@ -4,7 +4,7 @@ import { FilterButton } from './Button'
 import { useState, useEffect } from 'react'
 import { FilterContainer } from './Styles/Container.styled'
 
-const FilterForm = ({ monthsOptoins, currentDate, setCostsData }) => {
+const FilterForm = ({ monthsOptoins, currentDate, setCostsData, userIdentifier }) => {
 
   const [selectMonth, setSelectMonth] = useState(monthsOptoins[currentDate.getMonth() + 1]);
   const [selectYear, setSelectYear] = useState(currentDate.getFullYear());
@@ -24,7 +24,7 @@ const FilterForm = ({ monthsOptoins, currentDate, setCostsData }) => {
   }
 
   const fetchCostsFromDB = async () => {
-    const url = "http://localhost:5000/costs/year/" + selectYear + "/month/" + selectMonth;
+    const url = "http://localhost:5000/costs/userid/"+ userIdentifier + "/year/" + selectYear + "/month/" + selectMonth;
     const response = await fetch(url);
     const data = response.json();
     return data;
